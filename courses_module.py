@@ -80,11 +80,15 @@ def read_query(connection, query):
     except Error as err:
         print(f"Error: '{err}'")
 
-def display_info(connection, info_query, column_names, table):
+def data_list(connection, info_query, column_names, table):
     results = read_query(connection, info_query)
     for data in results:
         data = list(data)
         table.append(data)
+    return table
+
+def display_info(connection, info_query, column_names, table):
+    data_list(connection, info_query, column_names, table)
     return display(pd.DataFrame(table, columns = column_names))
 
 def dict_value(dict, index):
