@@ -9,7 +9,8 @@ calculation_options = [
     "Average Grade",
     "Math Average",
     "Number of Course Type",
-    "Total Credits"
+    "Total Credits",
+    "GPA Calculator"
 ]
 
 cm.print_list(calculation_options)
@@ -104,6 +105,43 @@ def num_credit():
         return
     return query
 
+def gpa_calc():
+    query = """
+    SELECT
+	SUM(GPA * Credits)/SUM(Credits)
+    FROM
+        (SELECT 
+            CourseCode,
+            CASE
+                WHEN Grade >= 90 THEN 4.00
+                WHEN Grade >= 85 AND Grade <= 89 THEN 3.90
+                WHEN Grade >= 80 AND Grade <= 84 THEN 3.70
+                WHEN Grade >= 77 AND Grade <= 79 THEN 3.30
+                WHEN Grade >= 73 AND Grade <= 76 THEN 3.00
+                WHEN Grade >= 70 AND Grade <= 72 THEN 2.70
+                WHEN Grade >= 67 AND Grade <= 69 THEN 2.30
+                WHEN Grade >= 63 AND Grade <= 66 THEN 2.00
+                WHEN Grade >= 60 AND Grade <= 62 THEN 1.70
+                WHEN Grade >= 56 AND Grade <= 59 THEN 1.30
+                ELSE "STOP"
+            END AS GPA
+        FROM
+            course_info
+        WHERE
+            Credits != 0 AND
+            Grade IS NOT NULL AND
+            Completion = "Completed") AS G
+    INNER JOIN
+        course_info AS C
+    ON 
+        C.CourseCode = G.CourseCode
+    WHERE
+        C.Credits != 0 AND
+        C.Grade IS NOT NULL AND
+        C.Completion = "Completed";
+    """
+    return query
+
 table = []
 
 def calculate():
@@ -119,6 +157,9 @@ def calculate():
     elif type == 4:
         query = num_credit()
         cm.display_info(connection, query, ["Number of Credits"], table)
+    elif type == 5:
+        query = gpa_calc()
+        cm.display_info(connection, query, ["GPA"], table)
     else:
         return
     
