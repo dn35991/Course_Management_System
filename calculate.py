@@ -14,7 +14,7 @@ calculation_options = [
 ]
 
 cm.print_list(calculation_options)
-type = int(input("WHat would you like to calculate?: "))
+type = int(input("What would you like to calculate?: "))
 
 def calculate_avg():
     query = """
