@@ -4,7 +4,7 @@ import queries as q
 
 # This program will allow you to view the database based on differnet variables 
 
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 view_options = [
     "Course Type", 
     "Completion Type", 

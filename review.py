@@ -4,7 +4,7 @@ import personal as p
 # This program will allow you to update the entire system after a recent change in the 
 #   completion status of courses
 
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 courses_query = """
 SELECT
     CourseCode

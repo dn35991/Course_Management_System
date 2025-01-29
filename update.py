@@ -1,12 +1,18 @@
 import courses_module as cm
 import personal as p
 
-# This program will allow you to update a single entry for a specific course code in either table. Make sure 
+# This program will allow you to update a single entry for a specific course code in a table. Make sure 
 #   your input matches exactly to the entries or columns in the database
 
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
-cm.print_list(["course_info", "prerequisite_courses"])
+requirement_options = [
+    "Mandatory",
+    "Required Choice",
+    "Not Required"
+]
+
+cm.print_list(["course_info", "prerequisite_courses", "academic_plan"])
 table = int(input("Which table is being updated?: "))
 
 def update_course():
@@ -47,6 +53,15 @@ def update_course():
         """
         cm.execute_query(connection, prereq_query1)
         cm.execute_query(connection, prereq_query2)
+        
+        plan_query = f"""
+        UPDATE
+            academic_plan
+        SET {cm.PLAN_COLUMNS[0]} = "{value}"
+        WHERE {cm.PLAN_COLUMNS[0]} = "{course_code}";
+        """
+        cm.execute_query(connection, plan_query)
+
         query = f"""
         UPDATE
             course_info
@@ -112,11 +127,38 @@ def update_prereq():
     cm.execute_query(connection, query)
     return
 
+def update_plan():
+    course_code = input("What is the course code of the course being updated?: ")
+    cm.PLAN_COLUMNS.remove("CourseCode")
+    cm.print_list(cm.PLAN_COLUMNS)
+    column = int(input("What column is being updated?: " ))
+    cm.print_list(requirement_options)
+    value = int(input("What is the updated value?: "))
+
+    if 1 <= value <= 3:
+        query = f"""
+        UPDATE
+            academic_plan
+        SET {cm.PLAN_COLUMNS[column - 1]} = "{requirement_options[value - 1]}"
+        WHERE {cm.COURSE_COLUMNS[0]} = "{course_code}";
+        """
+    else:
+        query = f"""
+        UPDATE
+            academic_plan
+        SET {cm.PLAN_COLUMNS[column - 1]} = NULL
+        WHERE {cm.COURSE_COLUMNS[0]} = "{course_code}";
+        """
+    cm.execute_query(connection, query)
+    return
+
 def update_table(table):
     if table == 1:
         update_course()
     elif table == 2:
         update_prereq()
+    elif table == 3:
+        update_plan()
     else:
         return
     return

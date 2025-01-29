@@ -3,14 +3,22 @@ import personal as p
 
 # This program will allow you to calcualte different types of values depending on different variables
 
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
 calculation_options = [
     "Average Grade",
     "Math Average",
     "Number of Course Type",
     "Total Credits",
-    "GPA Calculator"
+    "GPA Calculator",
+    "Academic Plan Requirements"
+]
+
+requirement_options = [
+    "Mandatory",
+    "Required Choice",
+    "Not Required",
+    "Mandatory + Required Choice"
 ]
 
 cm.print_list(calculation_options)
@@ -142,6 +150,42 @@ def gpa_calc():
     """
     return query
 
+def plan_requirements():
+    cm.PLAN_COLUMNS.remove("CourseCode")
+    cm.print_list(cm.PLAN_COLUMNS)
+    plan = int(input("Which academic plan would you like to calculate?: "))
+    cm.print_list(requirement_options)
+    requirement = int(input("What would you like to calculate?: "))
+    if 1 <= requirement <= 3:
+        query = f"""
+        SELECT 
+            SUM(C.Credits)
+        FROM
+            academic_plan AS P
+        INNER JOIN
+            course_info AS C
+        ON 
+            C.CourseCode = P.CourseCode
+        WHERE 
+            {cm.PLAN_COLUMNS[plan - 1]} = "{requirement_options[requirement - 1]}";
+        """
+    elif requirement == 4:
+        query = f"""
+        SELECT 
+            SUM(C.Credits)
+        FROM
+            academic_plan AS P
+        INNER JOIN
+            course_info AS C
+        ON 
+            C.CourseCode = P.CourseCode
+        WHERE 
+            {cm.PLAN_COLUMNS[plan - 1]} IN ("Mandatory", "Required Choice");
+        """
+    else:
+        return
+    return query
+
 table = []
 
 def calculate():
@@ -160,6 +204,9 @@ def calculate():
     elif type == 5:
         query = gpa_calc()
         cm.display_info(connection, query, ["GPA"], table)
+    elif type == 6:
+        query = plan_requirements()
+        cm.display_info(connection, query, ["Total Credits"], table)
     else:
         return
     

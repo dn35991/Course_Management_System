@@ -5,13 +5,13 @@ import personal as p
 #   Continute writing each prerequisite until you do not need anymore. When no more prerequisites are required,
 #   leave the questions blank and the program will end (press enter on both questions).
  
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
-course_code = input("What is the course code? ")
+code = input("What is the course code? ")
 pcode = ""
 minimum = ""
 
-def add_prereqs():
+def add_prereqs(course_code):
     n = 0
     while True:
         pcode = input("What is the prerequisite course code?: ")
@@ -44,4 +44,4 @@ def add_prereqs():
 
     print(f"{n} Prerequistes Added for {course_code}")
 
-add_prereqs()
+add_prereqs(code)

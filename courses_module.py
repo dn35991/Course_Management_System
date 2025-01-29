@@ -1,3 +1,4 @@
+import personal as p
 import mysql.connector
 from mysql.connector import Error
 import pandas as pd
@@ -5,11 +6,12 @@ from IPython.display import display
 
 # This is the module used in all of the programs for this project. The global constants should not be changed
 #   since the database is initialized with specific column and table names. Before begining to run any programs, 
-#   make sure to edit the file "personal.py" where you must enter the values for "HOST_NAME", "USERNAME", and "PASSWORD"
+#   make sure to edit the file "personal.py" where you must enter the values for "HOST_NAME", "USERNAME", "PASSWORD", 
+#   "DATABASE", and "PLAN_COLUMNS"
 
-DATABASE = "courses"
 COURSE_TABLE = "course_info"
 PREREQ_TABLE = "prerequisite_courses"
+PLAN_TABLE = "academic_plan"
 
 COURSE_DICT = {
     "CourseCode": None,
@@ -29,6 +31,7 @@ PREREQ_DICT = {
 
 COURSE_COLUMNS = list(COURSE_DICT.keys())
 PREREQ_COLUMNS = list(PREREQ_DICT.keys())
+PLAN_COLUMNS = ["CourseCode"] + p.PLAN_COLUMNS
 COMPLETION_TYPES = COURSE_DICT[list(COURSE_DICT.keys())[4]]
 COURSE_TYPE = COURSE_DICT[list(COURSE_DICT.keys())[3]]
 
@@ -107,3 +110,13 @@ def print_list(item):
 def list_to_string(list, seperator):
     result = f"{seperator}".join(list)
     return result
+
+def create_plan_columns(connection, list):
+    for plan in list:
+        plan_query = f"""
+        ALTER TABLE academic_plan
+            ADD `{plan}` VARCHAR(50);       
+        """
+        execute_query(connection, plan_query)
+    return
+

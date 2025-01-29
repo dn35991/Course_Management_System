@@ -4,9 +4,9 @@ import personal as p
 # This program will allow you to add a single course and all of its information into the course information table.
 #   Be sure to write each input as specificied in the question prompts.
  
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
-course_code = input("What is the course code (ABCD 000)?: ")
+code = input("What is the course code (ABCD 000)?: ")
 course_name = input("What is the name of the course?: ")
 credits = input("How many credits is the course worth?: ")
 cm.print_list(cm.COURSE_TYPE)
@@ -24,7 +24,7 @@ def add_query(course_code, course_name, credits, course_type, completion, term, 
     cm.execute_query(connection, query)
     return
 
-def add_course():
+def add_course(course_code):
     if completion == 4 or completion == 5:
         add_query(course_code, course_name, credits, course_type, completion, "NULL", "NULL")
         print(f"{cm.COMPLETION_TYPES[completion - 1]} Course Added")
@@ -41,4 +41,14 @@ def add_course():
         print("No course was added")
         return
 
-add_course()
+def add_plan(course_code):
+    query = f"""
+    INSERT INTO
+        academic_plan (CourseCode)
+    VALUES
+        ("{course_code}")
+    """
+    cm.execute_query(connection, query)
+
+add_course(code)
+add_plan(code)

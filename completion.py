@@ -3,7 +3,7 @@ import personal as p
 
 # This program will allow you to change the completion status of a course
 
-connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
 course_code = input("What is the course code of the course?: ")
 cm.print_list(cm.COMPLETION_TYPES)

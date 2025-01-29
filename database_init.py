@@ -7,7 +7,7 @@ import personal as p
 server_connection = cm.server_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD)
 
 database_query = f"""
-CREATE DATABASE {cm.DATABASE};
+CREATE DATABASE `{p.DATABASE}`;
 """
 
 course_table_query = """
@@ -31,9 +31,18 @@ CREATE TABLE prerequisite_courses (
 );
 """
 
+plan_table_query = f"""
+CREATE TABLE academic_plan (
+    CourseCode VARCHAR(30) NOT NULL,
+    PRIMARY KEY (CourseCode)
+);
+"""
+
 cm.execute_query(server_connection, database_query)
 
-database_connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, cm.DATABASE)
+database_connection = cm.database_connection(p.HOST_NAME, p.USERNAME, p.PASSWORD, p.DATABASE)
 
 cm.execute_query(database_connection, course_table_query)
 cm.execute_query(database_connection, prereq_table_query)
+cm.execute_query(database_connection, plan_table_query)
+cm.create_plan_columns(database_connection, cm.PLAN_COLUMNS) 
