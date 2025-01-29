@@ -13,7 +13,7 @@ CREATE DATABASE {cm.DATABASE};
 course_table_query = """
 CREATE TABLE course_info (
     CourseCode VARCHAR(30) NOT NULL,
-    CourseName VARCHAR(10000),
+    CourseName VARCHAR(1000),
     Credits DECIMAL(10,2),
     CourseType VARCHAR(20),
     Completion VARCHAR(20),
