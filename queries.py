@@ -1,19 +1,27 @@
 # List of constant queries that are used in the programs
 
 ORDERING = """
-(CASE WHEN C.Completion = "Completed" THEN 1
+(CASE 
+    WHEN C.Completion = "Completed" THEN 1
     WHEN C.Completion = "Current" THEN 2
     WHEN C.Completion = "Planned" THEN 3
     WHEN C.Completion = "Available" THEN 4
     WHEN C.Completion = "Prereq" THEN 5
     ELSE 6
     END) ASC,
-(CASE WHEN Term = NULL THEN 1
+(CASE 
+    WHEN Term = NULL THEN 1
     ELSE 2
     END) DESC,
 Term ASC,
-Credits ASC,
-(CASE WHEN C.CourseType = "Non-Math" THEN 1
+(CASE 
+    WHEN LEFT(C.Term, 1) = 'F' THEN 1
+    WHEN LEFT(C.Term, 1) = 'W' THEN 2
+    WHEN LEFT(C.TERM, 1) = 'S' THEN 3
+    ELSE 4
+    END) ASC,
+(CASE 
+    WHEN C.CourseType = "Non-Math" THEN 1
     WHEN C.CourseType = "PD" THEN 2
     WHEN C.CourseType = "Math" THEN 3
     ELSE 4
